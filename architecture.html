@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Architecture &mdash; SiMFS-Tk 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Component reference" href="components.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiMFS-Tk
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#components">Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dumb-by-choice">Dumb by choice</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#json">JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pipelines">Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-driver">Python driver</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Component reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiMFS-Tk</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Architecture</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/architecture.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
+<p>This section describes the overall design philosophy and archtitecture of
+<em>SiMFS-Tk</em>.</p>
+<img alt="_images/simfs_scheme.png" src="_images/simfs_scheme.png" />
+<div class="section" id="components">
+<h2>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h2>
+<p><em>SiMFS-Tk</em> is a collection of components, which are basically individual pieces
+of sotware that perform one step of a single molecule simulation.  They read
+and write one or more plain binary data streams and can be configured with
+short json documents (see <a class="reference internal" href="#json-label"><span class="std std-ref">JSON</span></a>). Each component has a small
+command line program to control it. The executables read configuration form
+<code class="docutils literal notranslate"><span class="pre">stdin</span></code>, open the necessary files and / or pipes and write a complete
+parameter log to <code class="docutils literal notranslate"><span class="pre">stdout</span></code> before running the actual task. A component either
+produces or transforms data streams. Data streams are in the simplest case
+plain binary files on disk.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_xxx &lt; params.json &gt; log.json
+</pre></div>
+</div>
+<div class="section" id="dumb-by-choice">
+<h3>Dumb by choice<a class="headerlink" href="#dumb-by-choice" title="Permalink to this headline">¶</a></h3>
+<p>The component interface is intentionally kept simple. They will do their best
+not to crash due to erroneus input, but won’t do any parameter checking or
+input validation. All a component can do is read, process and write data
+streams regardless of their origin and destination. Size, start, end or any
+other information about the stream data is no known to the components.</p>
+</div>
+</div>
+<div class="section" id="json">
+<span id="json-label"></span><h2>JSON<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h2>
+<p>Json (Javascript Object Notation) is a leightweight structured plain text data
+format. It consists of a (potentially nested) set of key, value pairs and
+supports strings, numebers and lists.  A key-value-mapping (object) is enclosed
+in curly braces:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;some_number&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+  <span class="nt">&quot;some_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello there&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;some_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+  <span class="nt">&quot;some_onbject&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;nested_number&quot;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span>
+     <span class="nt">&quot;nested_name&quot;</span><span class="p">:</span> <span class="s2">&quot;structure, yay!&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Json is used throughout <em>SiMFS-Tk</em> to communicate simulation parameters.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Json is incredibly widespread, so it is very likely, that your anylsis
+software of choice supports it in one or the other way. However, you can
+always edit the default parameter jsons provided by each component with a
+plain text editor.</p>
+</div>
+</div>
+<div class="section" id="pipelines">
+<h2>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h2>
+<p>To achieve complex simulation tasks, multiple components have to work together.
+Since all components really do is reading and writing files, it is easy to just
+apply component after component to a set of files until the final result is
+produced. This approach makes iterating single steps in the process easy, since
+all intermediate data is preserved and can be reused time and again.</p>
+<p>Disadvantages of this approach is the slow speed and potential large amount of
+data that will be written to disk. On UNIX systems this can be circumvented by
+using <cite>pipes</cite>. In the UNIX world, pipes can be used to allow small tools to
+talk to each other and solve complex tasks in a single run. Output from one
+tool is passed to the next via the pipe and allows both programs to work in
+parallel. The standard <cite>pipe</cite> is denoted <code class="docutils literal notranslate"><span class="pre">|</span></code> and connects <code class="docutils literal notranslate"><span class="pre">stdout</span></code> and
+<code class="docutils literal notranslate"><span class="pre">stdin</span></code> of two prgrams:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ls <span class="p">|</span> grep .*.dat <span class="c1"># searches the output of ls with grep for .dat files.</span>
+</pre></div>
+</div>
+<p><cite>Named pipes</cite> work the same way but are actual entries in the filesystem, just
+as a real file. Due to the UNIX notion of <cite>“everything is a file”</cite>, programs
+reading and writing unix files (such as <em>SiMFS-Tk</em> components) do not care
+wether they work with pipes or files. In that way, it is possible to run
+multiple components in parallel that read and write to named pipes.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Data is just handed via the pipe and is lost for further analysis if no
+other way of saving it to disk is in place.</p>
+</div>
+<p>UNIX named pipes are created using <code class="docutils literal notranslate"><span class="pre">mkfifo</span></code>.</p>
+</div>
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
+<p><em>SiMFS-Tk</em> works with binary data streams for efficiency. Fortunately the data
+is incredibly simple: All data is standard double precision IEEE 754 floating
+point numbers, so most anaylsis software will have a way of reading and writing
+compatible data. A little complexity is still in the grouping of numbers that
+represent a data entry: Molecular coordinates have four numbers, timed values
+(focus functions, FRET efficiencies, etc.) have two and simple timestamps have
+one.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="34%" />
+<col width="26%" />
+<col width="39%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Datatype</th>
+<th class="head">Size</th>
+<th class="head">Layout</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Coordinate</td>
+<td>4 x 8 byte</td>
+<td>(x, y, z, time)</td>
+</tr>
+<tr class="row-odd"><td>Timed Value</td>
+<td>2 x 8 byte</td>
+<td>(value, time)</td>
+</tr>
+<tr class="row-even"><td>Timetag</td>
+<td>1 x 8 byte</td>
+<td>(time)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Throughout <em>SiMFS-Tk</em> parameters and data streams, <strong>prefixless SI base
+units</strong> like meters, seconds, and Watts are used to make these values least
+ambiguous.</p>
+</div>
+</div>
+<div class="section" id="python-driver">
+<h2>Python driver<a class="headerlink" href="#python-driver" title="Permalink to this headline">¶</a></h2>
+<p>Due to the simple command line interface it is simple to call <em>SiMFS-Tk</em>
+components from other software. This is what the python driver that is included
+in the repository does. It provides a python interface to configure and start
+subprocesses running the <em>SiMFS-Tk</em> component excecutables. In addition it
+handles the required named pipes to connect components and starts the processes
+asynchronously preventing deadlocks.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The python driver will be released soon.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="components.html" class="btn btn-neutral float-right" title="Component reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Till Zickmantel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,403 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Focus &mdash; SiMFS-Tk 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="E-Field calculator" href="simfs_efi.html" />
+    <link rel="prev" title="Conformation" href="simfs_cnf.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiMFS-Tk
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../components.html">Component reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simfs_dif.html">Diffusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_sft.html">Coordinate shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_cnf.html">Conformation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Focus</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#signature">Signature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-params-json">Example params.json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_efi.html">E-Field calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_pls.html">Pulse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_ph2.html">Photophysics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_buf.html">Buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_spl.html">Splitter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_mix.html">Mixer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiMFS-Tk</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../components.html">Component reference</a> &raquo;</li>
+        
+      <li>Focus</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/components/simfs_fcs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="focus">
+<h1>Focus<a class="headerlink" href="#focus" title="Permalink to this headline">¶</a></h1>
+<p><code class="code docutils literal notranslate"><span class="pre">simfs_fcs</span></code> evaluates a foucs function on a stream of molecular coordinates.</p>
+<div class="section" id="signature">
+<h2>Signature<a class="headerlink" href="#signature" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_fcs <span class="o">[</span>list<span class="o">]</span> <span class="o">[</span>exi<span class="p">|</span>det<span class="o">]</span> <span class="o">[</span>gauss<span class="p">|</span>alpha<span class="p">|</span>efield<span class="o">]</span> &lt; params.json &gt; log.json
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">list</span></code> : don’t run, only parse parameters</li>
+<li><code class="docutils literal notranslate"><span class="pre">exi|det</span></code> : choose excitation or detection mode (default: excitation)</li>
+<li><code class="docutils literal notranslate"><span class="pre">gauss|alpha|efield</span></code> : choose focus funcition (default: gauss)</li>
+</ul>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<p><strong>Mode:</strong></p>
+<dl class="object">
+<dt id="excitation.json">
+<!--[excitation.json]--><code class="descname">excitation.json</code><a class="headerlink" href="#excitation.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters of simfs_fcs exi</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Object Properties:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>input</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="Python String"><em>string</em></a>) – Coordinate input filename</li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="Python String"><em>string</em></a>) – Flux density output filename</li>
+<li><strong>power</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – Excitation power in Watt</li>
+<li><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – Excitation wavelength in m</li>
+<li><strong>focus</strong> (<em>object</em>) – Focus function parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="object">
+<dt id="detection.json">
+<!--[detection.json]--><code class="descname">detection.json</code><a class="headerlink" href="#detection.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters of simfs_fcs det</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Object Properties:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>input</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="Python String"><em>string</em></a>) – Coordinate input filename</li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="Python String"><em>string</em></a>) – Detection efficiency output filename</li>
+<li><strong>focus</strong> (<em>object</em>) – Focus function parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><strong>Kind:</strong></p>
+<dl class="object">
+<dt id="gauss.json">
+<!--[gauss.json]--><code class="descname">gauss.json</code><a class="headerlink" href="#gauss.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Additional foucus parameters of simfs_fcs gauss</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Object Properties:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>waist_x</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – <span class="math notranslate nohighlight">\(\frac{1}{e^2}\)</span> waist in x of gauss focus.</li>
+<li><strong>waist_y</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – <span class="math notranslate nohighlight">\(\frac{1}{e^2}\)</span> waist in y of gauss focus.</li>
+<li><strong>waist_z</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – <span class="math notranslate nohighlight">\(\frac{1}{e^2}\)</span> waist in z of gauss focus.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="object">
+<dt id="alpha.json">
+<!--[alpha.json]--><code class="descname">alpha.json</code><a class="headerlink" href="#alpha.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Additional foucus parameters of simfs_fcs alpha</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Object Properties:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>waist_xy</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – <span class="math notranslate nohighlight">\(\frac{1}{e^2}\)</span> waist in xy of alpha focus.</li>
+<li><strong>waist_z</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – <span class="math notranslate nohighlight">\(\frac{1}{e^2}\)</span> waist in z of alpha ocus.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="example-params-json">
+<h2>Example params.json<a class="headerlink" href="#example-params-json" title="Permalink to this headline">¶</a></h2>
+<p>Gaussian excitation: <code class="docutils literal notranslate"><span class="pre">simfs_fcs</span> <span class="pre">gauss</span> <span class="pre">exi</span> <span class="pre">&lt;</span> <span class="pre">params.json</span></code></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;focus&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;waist_x&quot;</span><span class="p">:</span> <span class="mf">2e-07</span><span class="p">,</span>
+        <span class="nt">&quot;waist_y&quot;</span><span class="p">:</span> <span class="mf">2e-07</span><span class="p">,</span>
+        <span class="nt">&quot;waist_z&quot;</span><span class="p">:</span> <span class="mf">8e-07</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;__coordinates__&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;output&quot;</span><span class="p">:</span> <span class="s2">&quot;__focus__&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;power&quot;</span><span class="p">:</span> <span class="mf">1e-10</span><span class="p">,</span>
+    <span class="nt">&quot;wavelength&quot;</span><span class="p">:</span> <span class="mf">4.88e-07</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Gaussian detection: <code class="docutils literal notranslate"><span class="pre">simfs_fcs</span> <span class="pre">gauss</span> <span class="pre">det</span> <span class="pre">&lt;</span> <span class="pre">params.json</span></code></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;focus&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;waist_x&quot;</span><span class="p">:</span> <span class="mf">2e-07</span><span class="p">,</span>
+        <span class="nt">&quot;waist_y&quot;</span><span class="p">:</span> <span class="mf">2e-07</span><span class="p">,</span>
+        <span class="nt">&quot;waist_z&quot;</span><span class="p">:</span> <span class="mf">8e-07</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;__coordinates__&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;output&quot;</span><span class="p">:</span> <span class="s2">&quot;__focus__&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Alpha excitation: <code class="docutils literal notranslate"><span class="pre">simfs_fcs</span> <span class="pre">alpha</span> <span class="pre">exi</span> <span class="pre">&lt;</span> <span class="pre">params.json</span></code></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;focus&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;waist_xy&quot;</span><span class="p">:</span> <span class="mf">2e-07</span><span class="p">,</span>
+        <span class="nt">&quot;waist_z&quot;</span><span class="p">:</span> <span class="mf">8e-07</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;__coordinates__&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;output&quot;</span><span class="p">:</span> <span class="s2">&quot;__focus__&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;power&quot;</span><span class="p">:</span> <span class="mf">1e-10</span><span class="p">,</span>
+    <span class="nt">&quot;wavelength&quot;</span><span class="p">:</span> <span class="mf">4.88e-07</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Alpha detection: <code class="docutils literal notranslate"><span class="pre">simfs_fcs</span> <span class="pre">alpha</span> <span class="pre">det</span> <span class="pre">&lt;</span> <span class="pre">params.json</span></code></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;focus&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;waist_xy&quot;</span><span class="p">:</span> <span class="mf">2e-07</span><span class="p">,</span>
+        <span class="nt">&quot;waist_z&quot;</span><span class="p">:</span> <span class="mf">8e-07</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;__coordinates__&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;output&quot;</span><span class="p">:</span> <span class="s2">&quot;__focus__&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
+<p>Excitation focus function evaluate a photon flux density, according to a total
+power level. Detection functions are normalized to values between 0 and 1.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="simfs_efi.html" class="btn btn-neutral float-right" title="E-Field calculator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="simfs_cnf.html" class="btn btn-neutral" title="Conformation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Till Zickmantel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

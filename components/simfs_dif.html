@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Diffusion &mdash; SiMFS-Tk 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coordinate shift" href="simfs_sft.html" />
+    <link rel="prev" title="Component reference" href="../components.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiMFS-Tk
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../components.html">Component reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Diffusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#signature">Signature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-streams">Data streams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_sft.html">Coordinate shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_cnf.html">Conformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_fcs.html">Focus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_efi.html">E-Field calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_pls.html">Pulse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_ph2.html">Photophysics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_buf.html">Buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_spl.html">Splitter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simfs_mix.html">Mixer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiMFS-Tk</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../components.html">Component reference</a> &raquo;</li>
+        
+      <li>Diffusion</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/components/simfs_dif.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="diffusion">
+<h1>Diffusion<a class="headerlink" href="#diffusion" title="Permalink to this headline">¶</a></h1>
+<p><code class="code docutils literal notranslate"><span class="pre">simfs_dif</span></code> produces a single molecule diffusion trajectory inside a
+cylindrical box. In addition to the random walk coordinates, it outputs a
+timetag stream containing timetags for every collision with the simulation box.</p>
+<div class="section" id="signature">
+<h2>Signature<a class="headerlink" href="#signature" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_dif <span class="o">[</span>list<span class="o">]</span> &lt; params.json &gt; log.json
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">list</span></code> : don’t run, only parse parameters</li>
+</ul>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<dl class="object">
+<dt id="diffusion.json">
+<!--[diffusion.json]--><code class="descname">diffusion.json</code><a class="headerlink" href="#diffusion.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters of simfs_dif</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Object Properties:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>coordinate_output</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="Python String"><em>string</em></a>) – Output filename for coordinates</li>
+<li><strong>collision_output</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="Python String"><em>string</em></a>) – Output filename for collision times</li>
+<li><strong>experiment_time</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – Experiment time in seconds</li>
+<li><strong>increment</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – Time increment per diffusion step in seconds</li>
+<li><strong>diffusion_coefficient</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – Diffusion <span class="math notranslate nohighlight">\(D\)</span> in <span class="math notranslate nohighlight">\(\rm{m \cdot s}^{-2}\)</span></li>
+<li><strong>half_height</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – Half height of diffusion cylinder in meter</li>
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#float" title="Python Float"><em>float</em></a>) – Radius of cylinder in meter</li>
+<li><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#int" title="Python Integer"><em>int</em></a>) – Random seed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><strong>Example:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;collision_output&quot;</span><span class="p">:</span> <span class="s2">&quot;__collisions__&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;coordinate_output&quot;</span><span class="p">:</span> <span class="s2">&quot;__coordinates__&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;diffusion_coefficient&quot;</span><span class="p">:</span> <span class="mf">1e-10</span><span class="p">,</span>
+    <span class="nt">&quot;experiment_time&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="nt">&quot;half_height&quot;</span><span class="p">:</span> <span class="mf">1e-06</span><span class="p">,</span>
+    <span class="nt">&quot;increment&quot;</span><span class="p">:</span> <span class="mf">1e-07</span><span class="p">,</span>
+    <span class="nt">&quot;radius&quot;</span><span class="p">:</span> <span class="mf">1e-06</span><span class="p">,</span>
+    <span class="nt">&quot;seed&quot;</span><span class="p">:</span> <span class="mi">1865456046</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="data-streams">
+<h2>Data streams<a class="headerlink" href="#data-streams" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="22%" />
+<col width="15%" />
+<col width="13%" />
+<col width="19%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Type</th>
+<th class="head">Name</th>
+<th class="head">Datatype</th>
+<th class="head">Size</th>
+<th class="head">Layout</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>out</td>
+<td>coordinate_output</td>
+<td>Coordinate</td>
+<td>4 x 8 byte</td>
+<td>(x, y, z, time)</td>
+<td>Molecular trajectory</td>
+</tr>
+<tr class="row-odd"><td>out</td>
+<td>collision_output</td>
+<td>Timetag</td>
+<td>1 x 8 byte</td>
+<td>(time)</td>
+<td>Collision events</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
+<p>The simulation cylinder is defined by a radius and a half height. The initial
+position is chosen at random somewhere within the box and moved incrementally
+for every time increment in x, y and z. The stepsize in all dimension follows
+the same normal distrubution. Each step is recorded as an (x, y, z, t) record
+in the coordinate output.</p>
+<p>When a coordinate is outside the box (i.e. the molecule would hit the wall of
+the box), a collision event is written to the collision output and the
+coordinate is discarded. A new attempt to generate a valid coordinate is
+calculated until a valid step is acquired. However, when a second collision
+follows the first immediatly, no collision event is outputted.  The event times
+in the collision output are thereby guaranteed to be unique.</p>
+<p>The diffusion coefficient will be converted to the standard deviation of the
+internal normal distribution according to <span class="math notranslate nohighlight">\(\sigma^2 = 2\cdot D \Delta t\)</span>
+with <span class="math notranslate nohighlight">\(\Delta t\)</span> being the increment of the diffusion step.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="simfs_sft.html" class="btn btn-neutral float-right" title="Coordinate shift" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../components.html" class="btn btn-neutral" title="Component reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Till Zickmantel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
