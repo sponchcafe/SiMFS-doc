@@ -91,6 +91,7 @@ Contents
    :maxdepth: 2
 
    installation
+   introduction
    quickstart
    tutorial
    architecture
