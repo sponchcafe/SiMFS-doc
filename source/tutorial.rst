@@ -1,5 +1,5 @@
-Tutorial
-========
+Tutorial (pysimfs)
+==================
 
 This section contains a series of short tutorials for common tasks with
 *SiMFS-Tk*. Check also the more elaborate examples in the accompanying jupyter
