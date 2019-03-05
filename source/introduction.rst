@@ -1,10 +1,9 @@
 Introduction
 ============
 
-Welcome! If you 
-
 To understand the structure and functionality of **SiMFS-Tk**, let's walk
-through a simple single molecule experiment and map out how it would be modeled.
+through a simple single molecule experiment and map out how it would be
+modeled.
 
 Take for instance a single dye molecule that lives in a small box that is
 illuminated by a focused laser beam. The molecule is free to diffuse according
