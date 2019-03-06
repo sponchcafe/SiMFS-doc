@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quickstart &mdash; SiMFS-Tk 0.0.1 documentation</title>
+  <title>Quickstart (SiMFS-core) &mdash; SiMFS-Tk 0.0.1 documentation</title>
   
 
   
@@ -26,10 +26,11 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom_styles.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial" href="tutorial.html" />
-    <link rel="prev" title="Installation" href="installation.html" /> 
+    <link rel="next" title="Tutorial (pysimfs)" href="tutorial.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,8 +85,33 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart (SiMFS-core)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#diffusion-and-component-basics">Diffusion and component basics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites-and-setup">Prerequisites and setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#working-with-parameters">Working with parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-a-component">Running a component</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inspecting-results">Inspecting results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#evaluating-focus-functions">Evaluating focus functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#excitation-focus">Excitation focus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#detection-focus">Detection focus</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#photophysics">Photophysics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#three-state-system">Three state system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameter-representation">Parameter representation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#detection-and-photon-handling">Detection and photon handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (pysimfs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">Component reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
@@ -135,7 +161,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Quickstart</li>
+      <li>Quickstart (SiMFS-core)</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,8 +180,381 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="quickstart">
-<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="quickstart-simfs-core">
+<span id="quickstart-label"></span><h1>Quickstart (SiMFS-core)<a class="headerlink" href="#quickstart-simfs-core" title="Permalink to this headline">¶</a></h1>
+<p>Once you have your SiMFS-core installation in place, you can start producing
+simulation data. This chapter will walk you through the process of simulating a
+single diffusing fluorophore with cw-excitation.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This section will use the plain commandline interface of the SiMFS-core
+package. For more complex simulations the python driver pysimfs is
+recommended. Its usage is introduced in the tutorials section. This section
+will demo the fundamental building blocks of a SiMFS-Tk simulation pipeline.
+This is the most basic but also most flexible approach when working with
+SiMFS-Tk. If you are not comfortable with using the shell directly, you can
+skip this section and start with the tutorial, where this exact simulation
+and more complex cases will be addressed using the python interface.</p>
+</div>
+<div class="section" id="diffusion-and-component-basics">
+<h2>Diffusion and component basics<a class="headerlink" href="#diffusion-and-component-basics" title="Permalink to this headline">¶</a></h2>
+<p>If you want to use SiMFS-Tk from the commandline, make sure you have a basic
+understanding of UNIX bash and the following commands: <code class="docutils literal notranslate"><span class="pre">ls</span></code>, <code class="docutils literal notranslate"><span class="pre">cd</span></code>, <code class="docutils literal notranslate"><span class="pre">rm</span></code>,
+<code class="docutils literal notranslate"><span class="pre">mkfifo</span></code>, <code class="docutils literal notranslate"><span class="pre">ps</span></code> and <code class="docutils literal notranslate"><span class="pre">kill</span></code> as well as the usage of <code class="docutils literal notranslate"><span class="pre">stdin</span></code> (<code class="docutils literal notranslate"><span class="pre">&lt;</span></code>),
+<code class="docutils literal notranslate"><span class="pre">stdout</span></code> (<code class="docutils literal notranslate"><span class="pre">&gt;</span></code>) redirection and command chaining with <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> and <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>.</p>
+<div class="section" id="prerequisites-and-setup">
+<h3>Prerequisites and setup<a class="headerlink" href="#prerequisites-and-setup" title="Permalink to this headline">¶</a></h3>
+<p>Create a working directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mkdir SiMFS-quickstart
+$ <span class="nb">cd</span> SiMFS-quickstart
+</pre></div>
+</div>
+<p>Make sure you can invoke SiMFS-Tk components from your working directory.</p>
+</div>
+<div class="section" id="working-with-parameters">
+<h3>Working with parameters<a class="headerlink" href="#working-with-parameters" title="Permalink to this headline">¶</a></h3>
+<p>First we want to generate a diffusion trajectory using <code class="docutils literal notranslate"><span class="pre">simfs_dif</span></code>. The
+diffusion trajectory is a random walk in three dimensions represented as
+coordinates <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z,</span> <span class="pre">t)</span></code>. Invoke <code class="docutils literal notranslate"><span class="pre">simfs_dif</span></code> with the <code class="docutils literal notranslate"><span class="pre">list</span></code> option to
+dump a default set of parameters:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_dif list
+  Using defaults only.
+  <span class="o">{</span>
+      <span class="s2">&quot;collision_output&quot;</span>: <span class="s2">&quot;__collisions__&quot;</span>,
+      <span class="s2">&quot;coordinate_output&quot;</span>: <span class="s2">&quot;__coordinates__&quot;</span>,
+      <span class="s2">&quot;diffusion_coefficient&quot;</span>: 1e-10,
+      <span class="s2">&quot;experiment_time&quot;</span>: <span class="m">1</span>.0,
+      <span class="s2">&quot;half_height&quot;</span>: 1e-06,
+      <span class="s2">&quot;increment&quot;</span>: 1e-07,
+      <span class="s2">&quot;radius&quot;</span>: 1e-06,
+      <span class="s2">&quot;seed&quot;</span>: <span class="m">1480616706</span>
+  <span class="o">}</span>
+</pre></div>
+</div>
+<p>You should see a whole bunch of text printed to the screen. <code class="docutils literal notranslate"><span class="pre">simfs_dif</span></code> first
+informs us about the fact that no parametrization was provided und only
+defaults are used. The <code class="docutils literal notranslate"><span class="pre">list</span></code> option prevents it from doing anything else but
+parse parameters and fill gaps with its default values. The paramters are
+encoded as a <code class="docutils literal notranslate"><span class="pre">json</span></code> object. You can save the defaults by redirecting them to a file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_dif list &gt; dif.json
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">dif.json</span></code> file contains the default diffusion parameters.
+<code class="docutils literal notranslate"><span class="pre">half_height</span></code> and <code class="docutils literal notranslate"><span class="pre">radius</span></code> specify the size of the box in which the molcule
+can diffuse, <code class="docutils literal notranslate"><span class="pre">experiment_time</span></code> is the length of the diffusion trajectory.
+Together with the time <code class="docutils literal notranslate"><span class="pre">increment</span></code> it determines the number of coordinates
+that will be generated. All units are SI base units (m, s, …). 1 second
+simulation time with a time increment of 100 ns produces 10 million individual
+coordinates. The <code class="docutils literal notranslate"><span class="pre">diffusion_coefficient</span></code> determines the diffusion behaviour
+(i.e. the step size in space) of the molecule. The two output parameters are
+filenames that <code class="docutils literal notranslate"><span class="pre">simfs_dif</span></code> will write its result to. <code class="docutils literal notranslate"><span class="pre">__coordinates__</span></code> will
+contain the 10 million coordinates after the run. We ignore the
+<code class="docutils literal notranslate"><span class="pre">collision_output</span></code> for now.</p>
+<p>We want to change the parameters to fit our needs. Open dif.json with your
+favourite editor and change th values for the coordinate output to
+<code class="docutils literal notranslate"><span class="pre">coords.dat</span></code> and the collision output to <code class="docutils literal notranslate"><span class="pre">/dev/null</span></code> (we don’t need it
+now). We also change the diffusion coefficient to <code class="docutils literal notranslate"><span class="pre">4.35e-10</span></code>, which is the
+literature value for Alexa Fluor 488 in water in <span class="math notranslate nohighlight">\(\frac{m^2}{s}\)</span>. Lastly
+delete the line containing the seed parameter and the trailing comma above.
+Save the file and feed it into <code class="docutils literal notranslate"><span class="pre">simfs_dif</span></code> again like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_dif list &lt; dif.json
+  <span class="o">{</span>
+      <span class="s2">&quot;collision_output&quot;</span>: <span class="s2">&quot;/dev/null&quot;</span>,
+      <span class="s2">&quot;coordinate_output&quot;</span>: <span class="s2">&quot;coords.dat&quot;</span>,
+      <span class="s2">&quot;diffusion_coefficient&quot;</span>: <span class="m">4</span>.35e-10,
+      <span class="s2">&quot;experiment_time&quot;</span>: <span class="m">1</span>.0,
+      <span class="s2">&quot;half_height&quot;</span>: 1e-06,
+      <span class="s2">&quot;increment&quot;</span>: 1e-07,
+      <span class="s2">&quot;radius&quot;</span>: 1e-06,
+      <span class="s2">&quot;seed&quot;</span>: <span class="m">1451956119</span>
+  <span class="o">}</span>
+</pre></div>
+</div>
+<p>The parameter dump reflects your changes. Note that if no seed is provided, a
+new one will be created every time.</p>
+</div>
+<div class="section" id="running-a-component">
+<h3>Running a component<a class="headerlink" href="#running-a-component" title="Permalink to this headline">¶</a></h3>
+<p>You are ready to start your first simulation run by ommiting the list option.
+You can use the parameter output as a log file for your run by again
+redirecting it to a new file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_dif &lt; dif.json &gt; dif.log.json
+</pre></div>
+</div>
+<p>After a brief moment, the command returns and the directory should contain two
+new files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ls -l
+  total <span class="m">312512</span>
+  -rw-rw-rw- <span class="m">1</span> tizi tizi <span class="m">320000000</span> Mar  <span class="m">5</span> <span class="m">15</span>:06 coords.dat
+  -rw-rw-rw- <span class="m">1</span> tizi tizi       <span class="m">217</span> Mar  <span class="m">5</span> <span class="m">15</span>:01 dif.json
+  -rw-rw-rw- <span class="m">1</span> tizi tizi       <span class="m">241</span> Mar  <span class="m">5</span> <span class="m">15</span>:06 dif.log.json
+</pre></div>
+</div>
+</div>
+<div class="section" id="inspecting-results">
+<h3>Inspecting results<a class="headerlink" href="#inspecting-results" title="Permalink to this headline">¶</a></h3>
+<p>The large <code class="docutils literal notranslate"><span class="pre">coords.dat</span></code> file contains the 10 million coordinates as binary
+tuples of (x, y, z, t). To quickly inspect it, you can use the system tool
+<code class="docutils literal notranslate"><span class="pre">od</span></code> that displays binary data as text:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ od -t f8 -N <span class="m">128</span> -w32 coords.dat
+  <span class="m">0000000</span>    <span class="m">8</span>.521610130932819e-07  -4.0887056784284747e-07     <span class="m">8</span>.16684813686339e-07                        <span class="m">0</span>
+  <span class="m">0000040</span>    <span class="m">8</span>.657852033462311e-07  -4.1840942341649523e-07    <span class="m">8</span>.263125708566305e-07                    1e-07
+  <span class="m">0000100</span>    <span class="m">8</span>.749074375681369e-07   -4.095287983491634e-07    <span class="m">8</span>.275083766747386e-07                    2e-07
+  <span class="m">0000140</span>    <span class="m">8</span>.822015070247384e-07   -4.162389674979344e-07    <span class="m">8</span>.272075611332907e-07                    3e-07
+  <span class="m">0000200</span>
+</pre></div>
+</div>
+<p>This shows you the first coordinates (<code class="docutils literal notranslate"><span class="pre">-N</span> <span class="pre">128</span></code>) as 8-byte float values
+(<code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">f8</span></code>) in 32-byte chunks per row (<code class="docutils literal notranslate"><span class="pre">-w32</span></code>). The x, y and z values describe
+the random walk in the box, while t increments in constants steps of 100 ns.</p>
+</div>
+</div>
+<div class="section" id="evaluating-focus-functions">
+<h2>Evaluating focus functions<a class="headerlink" href="#evaluating-focus-functions" title="Permalink to this headline">¶</a></h2>
+<p>We now have the position of the molecule as a function of time written to disk.
+Next we need to find out the laser intensity and detection efficiency of at
+each position. We use <code class="docutils literal notranslate"><span class="pre">simfs_exi</span></code> and <code class="docutils literal notranslate"><span class="pre">simfs_det</span></code> for this purpose.</p>
+<div class="section" id="excitation-focus">
+<h3>Excitation focus<a class="headerlink" href="#excitation-focus" title="Permalink to this headline">¶</a></h3>
+<p>Take a look at its default paramters:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_exi list
+  Using defaults only.
+  <span class="o">{</span>
+      <span class="s2">&quot;input&quot;</span>: <span class="s2">&quot;__coordinates__&quot;</span>,
+      <span class="s2">&quot;output&quot;</span>: <span class="s2">&quot;__focus__&quot;</span>,
+      <span class="s2">&quot;power&quot;</span>: 1e-06,
+      <span class="s2">&quot;shape&quot;</span>: <span class="o">{</span>
+          <span class="s2">&quot;waist_x&quot;</span>: <span class="m">2</span>.49e-07,
+          <span class="s2">&quot;waist_y&quot;</span>: <span class="m">2</span>.49e-07,
+          <span class="s2">&quot;waist_z&quot;</span>: <span class="m">6</span>.37e-07
+      <span class="o">}</span>,
+      <span class="s2">&quot;type&quot;</span>: <span class="s2">&quot;3dGauss&quot;</span>,
+      <span class="s2">&quot;wavelength&quot;</span>: <span class="m">4</span>.88e-07
+  <span class="o">}</span>
+</pre></div>
+</div>
+<p>The component converts 4d coordinates from its inputs to pairs of time and
+photon flux intensity at that position. The focus shape function is in this
+case a 3d Gauss that is parametrized with 3 <span class="math notranslate nohighlight">\(\frac{1}{e}\)</span> waists. The
+power and wavelength in W and m are needed to determine the photon flux density
+from this distribution.</p>
+<p>Save the parameters to <code class="docutils literal notranslate"><span class="pre">exi.json</span></code> and change the input file to our coordinate
+file. Furthermore, rename the output to <code class="docutils literal notranslate"><span class="pre">exciatation.dat</span></code> and increase the
+power to 10µW. You can again check the file like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_exi list &lt; fcs.json
+  <span class="o">{</span>
+      <span class="s2">&quot;input&quot;</span>: <span class="s2">&quot;coords.dat&quot;</span>,
+      <span class="s2">&quot;output&quot;</span>: <span class="s2">&quot;excitation.dat&quot;</span>,
+      <span class="s2">&quot;power&quot;</span>: 1e-05,
+      <span class="s2">&quot;shape&quot;</span>: <span class="o">{</span>
+          <span class="s2">&quot;waist_x&quot;</span>: <span class="m">2</span>.49e-07,
+          <span class="s2">&quot;waist_y&quot;</span>: <span class="m">2</span>.49e-07,
+          <span class="s2">&quot;waist_z&quot;</span>: <span class="m">6</span>.37e-07
+      <span class="o">}</span>,
+      <span class="s2">&quot;type&quot;</span>: <span class="s2">&quot;3dGauss&quot;</span>,
+      <span class="s2">&quot;wavelength&quot;</span>: <span class="m">4</span>.88e-07
+  <span class="o">}</span>
+</pre></div>
+</div>
+<p>You can now run the component in the same way as <code class="docutils literal notranslate"><span class="pre">simfs_dif</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_exi &lt; fcs.json &gt; fcs.log.json
+</pre></div>
+</div>
+<p>After the run, the file <code class="docutils literal notranslate"><span class="pre">excitation.dat</span></code> contains 10 million pairs of 8-byte
+photon-flux, time values:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ od -t f8 -N <span class="m">64</span> -w16 excitation.dat
+  <span class="m">0000000</span>         <span class="m">2876511477910</span>.12                        <span class="m">0</span>
+  <span class="m">0000020</span>        <span class="m">969522821513</span>.2721                    1e-07
+  <span class="m">0000040</span>        <span class="m">729249356145</span>.5566                    2e-07
+  <span class="m">0000060</span>        <span class="m">404358061321</span>.1981                    3e-07
+  <span class="m">0000100</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="detection-focus">
+<h3>Detection focus<a class="headerlink" href="#detection-focus" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">simfs_det</span></code> produces detection efficiencies between 0 and 1 in the same way
+that <code class="docutils literal notranslate"><span class="pre">simfs_exi</span></code> creates photon flux. For our purposes, we apply
+<code class="docutils literal notranslate"><span class="pre">simfs_det</span></code> to the same trajectory (<code class="docutils literal notranslate"><span class="pre">coords.dat</span></code>) without modifications.
+The parameters in <code class="docutils literal notranslate"><span class="pre">det.json</span></code> should look like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_det list &lt; det.json
+  <span class="o">{</span>
+      <span class="s2">&quot;input&quot;</span>: <span class="s2">&quot;coords.dat&quot;</span>,
+      <span class="s2">&quot;max_efficiency&quot;</span>: <span class="m">1</span>.0,
+      <span class="s2">&quot;output&quot;</span>: <span class="s2">&quot;efficiency.dat&quot;</span>,
+      <span class="s2">&quot;shape&quot;</span>: <span class="o">{</span>
+          <span class="s2">&quot;waist_x&quot;</span>: <span class="m">2</span>.49e-07,
+          <span class="s2">&quot;waist_y&quot;</span>: <span class="m">2</span>.49e-07,
+          <span class="s2">&quot;waist_z&quot;</span>: <span class="m">6</span>.37e-07
+      <span class="o">}</span>,
+      <span class="s2">&quot;type&quot;</span>: <span class="s2">&quot;3dGauss&quot;</span>
+  <span class="o">}</span>
+</pre></div>
+</div>
+<p>After running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_det &lt; det.json &gt; det.log.json
+</pre></div>
+</div>
+<p>You get a file with detection effciencies as a time series:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ od -t f8 -N <span class="m">64</span> -w16 efficiency.dat
+  <span class="m">0000000</span>   <span class="m">1</span>.1403589768728395e-14                        <span class="m">0</span>
+  <span class="m">0000020</span>    <span class="m">3</span>.843558634429651e-15                    1e-07
+  <span class="m">0000040</span>    <span class="m">2</span>.891022879781843e-15                    2e-07
+  <span class="m">0000060</span>    <span class="m">1</span>.603029741544923e-15                    3e-07
+  <span class="m">0000100</span>
+</pre></div>
+</div>
+<p>We now have evaluated our two focus functions for excitation and detection for
+our molecule.  Next up is the actual generation of photon events.</p>
+</div>
+</div>
+<div class="section" id="photophysics">
+<h2>Photophysics<a class="headerlink" href="#photophysics" title="Permalink to this headline">¶</a></h2>
+<p>The photophysics component <code class="docutils literal notranslate"><span class="pre">simfs_ph2</span></code> is the most complex part of SiMFS-Tk.
+Its core responsibility is to simulate a generalized state diagram that is
+tightly related to the Jablonkys diagram of a fluorophore. States like <em>S0</em>,
+<em>S1</em> and <em>T1</em> are connected via transition rates, that determine the individual
+life-times of a given state conversion. These rates may be constant or
+dynamically updated from input data. There are multiple ways a transition graph
+can interact with the outside world during the simulation.</p>
+<div class="section" id="three-state-system">
+<h3>Three state system<a class="headerlink" href="#three-state-system" title="Permalink to this headline">¶</a></h3>
+<p>Consider a simple 3-state fluorophore
+system:</p>
+<img alt="_images/EnergyDiagram.png" src="_images/EnergyDiagram.png" />
+<p>We have three states and four transitions (vibrational states and internal
+conversion are ignored here). The blue rates (<span class="math notranslate nohighlight">\(k_{ISC}\)</span> and
+<span class="math notranslate nohighlight">\(k_{rISC}\)</span>) are considered constant and can be specified by single rates.
+The green rate <span class="math notranslate nohighlight">\(k_{emi}\)</span> is the emission rate and also a constante.
+However, this transition is special, as it produces photons. <span class="math notranslate nohighlight">\(k_{exi}\)</span>
+depends on the laser excitation. It can be computed as <span class="math notranslate nohighlight">\(k_{exi} = \Phi
+\cdot \sigma\)</span>, where <span class="math notranslate nohighlight">\(\Phi\)</span> is the photon flux density of the laser
+excitation in <span class="math notranslate nohighlight">\(\frac{1}{m^2}\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> is the molecular
+absorption crosssection that is proprtional to the molar absorption coefficient
+<span class="math notranslate nohighlight">\(\epsilon\)</span> in <span class="math notranslate nohighlight">\(\frac{l}{mol\cdot cm}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\Phi\)</span> is the actual quantity that we computed in <code class="docutils literal notranslate"><span class="pre">excitation.dat</span></code>, so
+this file will serve as the input for the excitation edge. With the time step
+from the diffusion trajectory (100 ns), a rate will be computed from each input
+flux, and a static simulation of the graph with fixed rates is preformed until
+the next time step is reached.</p>
+</div>
+<div class="section" id="parameter-representation">
+<h3>Parameter representation<a class="headerlink" href="#parameter-representation" title="Permalink to this headline">¶</a></h3>
+<p>Translating this into parameters to
+<code class="docutils literal notranslate"><span class="pre">simfs_ph2</span></code> looks like this:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;initial_state&quot;</span><span class="p">:</span> <span class="s2">&quot;S0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;jablonsky&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;emi&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;output&quot;</span><span class="p">:</span> <span class="s2">&quot;emission.dat&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;rate&quot;</span><span class="p">:</span> <span class="mf">1e+8</span><span class="p">,</span>
+            <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;S0&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;exi&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;S0&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;rate&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;excitation.dat&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;epsilon&quot;</span><span class="p">:</span> <span class="mi">73000</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;isc&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;rate&quot;</span><span class="p">:</span> <span class="mf">1e+6</span><span class="p">,</span>
+            <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;T1&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;risc&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;T1&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;rate&quot;</span><span class="p">:</span> <span class="mf">1e+6</span><span class="p">,</span>
+            <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;S0&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Each object within the <code class="docutils literal notranslate"><span class="pre">jablonsky</span></code> object represents an edge in the
+transition graph. Each has at least a <code class="docutils literal notranslate"><span class="pre">from</span></code>, <code class="docutils literal notranslate"><span class="pre">to</span></code> and <code class="docutils literal notranslate"><span class="pre">rate</span></code> field
+specified. <code class="docutils literal notranslate"><span class="pre">isc</span></code> and <code class="docutils literal notranslate"><span class="pre">risc</span></code> have a constants rates set to 1 MHz. In addtion
+<code class="docutils literal notranslate"><span class="pre">emi</span></code> is parametrized to write a timetag to the output <code class="docutils literal notranslate"><span class="pre">emission.dat</span></code>
+whenever it is traversed. Note that you can add outputs to any edge you are
+interested in. The <code class="docutils literal notranslate"><span class="pre">exi</span></code> edge has a special dynamic rate parameter: It reads
+flux values from the input <code class="docutils literal notranslate"><span class="pre">excitation.dat</span></code> and calculates its rate according
+to the <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> value.</p>
+<p>Note the the names of the edges and nodes can be freely defined by the user.
+Nodes are implicitely added if they appear as <code class="docutils literal notranslate"><span class="pre">from</span></code> or <code class="docutils literal notranslate"><span class="pre">to</span></code> in at least
+one transition. Furthermore, a node without an outgoing transition is a dead
+end and terminates the simulation preemptively.</p>
+<p>Run the simulation with the given parameters in <code class="docutils literal notranslate"><span class="pre">ph2.json</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_ph2 &lt; ph2.json &gt; ph2.log.json
+</pre></div>
+</div>
+<p>As a result you get your emission file that contains photon arrival times:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ od -t f8 -N <span class="m">64</span> -w8 emission.dat
+  <span class="m">0000000</span>    <span class="m">0</span>.0009079984765546347
+  <span class="m">0000010</span>    <span class="m">0</span>.0009152793599941517
+  <span class="m">0000020</span>    <span class="m">0</span>.0009257110802838159
+  <span class="m">0000030</span>     <span class="m">0</span>.000943526107273474
+  <span class="m">0000040</span>    <span class="m">0</span>.0009598299824447027
+  <span class="m">0000050</span>    <span class="m">0</span>.0009761390643363464
+  <span class="m">0000060</span>    <span class="m">0</span>.0009989992608058992
+  <span class="m">0000070</span>    <span class="m">0</span>.0010024525289886105
+  <span class="m">0000100</span>
+</pre></div>
+</div>
+<p>You made it! These are simulated photon times that include diffusion dynamics
+through a Gauss shaped laser focus and actual photon statistics with blinking
+and antibunching.</p>
+</div>
+</div>
+<div class="section" id="detection-and-photon-handling">
+<h2>Detection and photon handling<a class="headerlink" href="#detection-and-photon-handling" title="Permalink to this headline">¶</a></h2>
+<p>You may have noticed that we haven’t used <code class="docutils literal notranslate"><span class="pre">efficiency.dat</span></code> so far. That is
+because we only simulated up until the moment of photon emission from the
+fluorophore and collected every single photon. In a real experiment, the
+detection of a photon depends on the laser focus. In SiMFS-Tk excitation and
+laser focus are independent objects that are handled in two subsequent steps.
+We have already produced a time series of derection efficincies for our
+diffusion trajectory according to our detection focus function. We use
+<code class="docutils literal notranslate"><span class="pre">simfs_spl</span></code> to split the raw photon events into actually detected photons and
+lost photons based on the detection efficiency data. The parameters look like this:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;accepted_output&quot;</span><span class="p">:</span> <span class="s2">&quot;detected.dat&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;efficiency_input&quot;</span><span class="p">:</span> <span class="s2">&quot;efficiency.dat&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;photon_input&quot;</span><span class="p">:</span> <span class="s2">&quot;emission.dat&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;rejected_output&quot;</span><span class="p">:</span> <span class="s2">&quot;/dev/null&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We select photons from the raw emission, decide to keep or to drop it according
+to the current detection efficiency and write the result to <code class="docutils literal notranslate"><span class="pre">detected.dat</span></code>.
+Rejected photons are discarded to <code class="docutils literal notranslate"><span class="pre">/dev/null</span></code>.</p>
+<p>As a result you get the file <code class="docutils literal notranslate"><span class="pre">detected.dat</span></code> which is a subset of
+<code class="docutils literal notranslate"><span class="pre">emission.dat</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ wc -c emission.dat detected.dat
+  <span class="m">598888</span> SiMFS-quickstart/emission.dat
+  <span class="m">202832</span> SiMFS-quickstart/detected.dat
+  <span class="m">801720</span> total
+</pre></div>
+</div>
+<p>You see, that with the current parameters, about two thirds of photons are
+dropped in the detection step.</p>
+<div class="section" id="next-steps">
+<h3>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h3>
+<p>Since the final result is a stream of binary 64-bit floating point time values,
+it is straight forward to feed it into your analysis procedure of choice.
+Timetrace binning and correlation analysis provide insight into the diffusion
+behaviour and its interaction with different focus shapes, as well as the rate
+fast photophysical dynamics represented by more complex rate graphs.</p>
+<p>Most of the components introduced here have more features available. Especially
+the capabilities of <code class="docutils literal notranslate"><span class="pre">simfs_ph2</span></code> to react to environmental inputs can increase
+the complexity ot the photophysics simulation a lot. Combining this with
+differnt focus shapes for <code class="docutils literal notranslate"><span class="pre">simfs_exi</span></code> and <code class="docutils literal notranslate"><span class="pre">simfs_det</span></code>, multiple excitation
+lines and pulse patterns opens a much wider field of simulation tasks. See the
+component documentation and the examples in the tutorials section for more
+info.</p>
+</div>
+</div>
 </div>
 
 
@@ -166,10 +565,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial (pysimfs)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="introduction.html" class="btn btn-neutral" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -26,10 +26,11 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom_styles.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Component reference" href="components.html" />
-    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+    <link rel="prev" title="Examples" href="examples.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,13 +85,12 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart (SiMFS-core)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (pysimfs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#components">Components</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#dumb-by-choice">Dumb by choice</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#components">Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#json">JSON</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pipelines">Pipelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
@@ -183,14 +183,11 @@ plain binary files on disk.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ simfs_xxx &lt; params.json &gt; log.json
 </pre></div>
 </div>
-<div class="section" id="dumb-by-choice">
-<h3>Dumb by choice<a class="headerlink" href="#dumb-by-choice" title="Permalink to this headline">¶</a></h3>
 <p>The component interface is intentionally kept simple. They will do their best
 not to crash due to erroneus input, but won’t do any parameter checking or
 input validation. All a component can do is read, process and write data
 streams regardless of their origin and destination. Size, start, end or any
 other information about the stream data is no known to the components.</p>
-</div>
 </div>
 <div class="section" id="json">
 <span id="json-label"></span><h2>JSON<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h2>
@@ -316,7 +313,7 @@ asynchronously preventing deadlocks.</p>
         <a href="components.html" class="btn btn-neutral float-right" title="Component reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

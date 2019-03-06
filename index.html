@@ -26,6 +26,7 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom_styles.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Installation" href="installation.html" /> 
@@ -83,8 +84,10 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart (SiMFS-core)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (pysimfs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">Component reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
@@ -160,49 +163,56 @@ Simulation Toolkit. It is still under active development, so some pats are not
 yet complete. For now, check out the installation section to get started.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">SiMFS-Tk is still under heavy development. Although the core implementation
-is pretty robust, this documentation will still grow during the next weeks.</p>
+<p class="last">SiMFS-Tk is still under heavy development.</p>
 </div>
 <div class="section" id="what-is-it">
 <h2>What is it?<a class="headerlink" href="#what-is-it" title="Permalink to this headline">¶</a></h2>
-<p><strong>SiMFS-Tk</strong> is a collection of simple tools to simulate single molecule
-fluorescence experiments. Each tool is a commandline program that is configured
-by a single json file and reads and writes a set of plain binary input and
-output files. By chaining together multiple tools (components), complex
-experiments can be simulated. The modular architecture allows easy and quick
-iteration of parameters, parallel execution of simulations as well as
-inspection of intermediate results and interfacing to third party software.</p>
-<p>The project is developed in portable C++11 and built with CMake. Although fully
-functional on Linux, MacOS and Windows platforms, some features are not
-available under Windows. For Windows users we recommend using <a class="reference external" href="https://www.cygwin.org">Cygwin</a>.</p>
+<p>SiMFS-Tk is a collection of tools to simulate single molecule fluorescence
+experiments. Each tool is a commandline program that is configured by a single
+json file and reads and writes a set of plain binary input and output files. By
+chaining together multiple tools (components), complex experiments can be
+simulated. The modular architecture allows easy and quick iteration of
+parameters, parallel execution of simulations as well as inspection of
+intermediate results and interfacing to third party software.</p>
+<p>The project is developed in portable C++11 and built with CMake. So far the
+functionality is only tested on UNIX systems.  For Windows users we recommend
+the Linux subsystem for Windows 10.</p>
 <div class="section" id="features">
 <h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Free isotropic diffusion and immobilized settings</li>
+<li>Free diffusion and immobilized settings</li>
 <li><dl class="first docutils">
-<dt>Three different focus functions</dt>
+<dt>Different focus functions</dt>
 <dd><ul class="first last">
 <li>3D-Gaussian</li>
 <li>Normalized flux pseudo-Gaussian</li>
+<li>Gaussian beam</li>
 <li>Ideal lens E-field function</li>
+<li>Custom grid interface for arbitrary numeric focus shape interpolation</li>
 </ul>
 </dd>
 </dl>
 </li>
+<li>Online and precalculated focus evaluation</li>
 <li>Independent excitation and detection foci</li>
-<li>Arbitrary pulse definition to model µs and ns ALEX, PIE, POE and other pulse shemes</li>
+<li>Arbitrary pulse definition to model µs and ns ALEX, PIE, POE and other pulse
+shemes</li>
 <li><dl class="first docutils">
 <dt>State based photophysics for flexible modeling of fluorophores</dt>
 <dd><ul class="first last">
-<li>Lifetime interval simulation to bridge short (ps) and long (minutes) timescales</li>
+<li>Lifetime interval simulation to bridge short (ps) and long (minutes)
+timescales</li>
 <li>Complete output of events in the rate graph (e.g. ISC and RISC events)</li>
-<li>Event system to react to external factors (molecule movement, laser power, FRET photons, collision with simulation box, …)</li>
+<li>Event system to react to external factors (molecule movement, laser
+power, FRET photons, collision with simulation box, …)</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li>Utilities for splitting, mixing and buffering photon timetags</li>
-<li>Highly parallel execution and low memroy usage due to pipeline design</li>
+<li>State simulator module to generate internal dynamics transitions</li>
+<li>Utilities for splitting, mixing and buffering photon timetags, t3r writer</li>
+<li>Imaging module for visualizing photon distributions</li>
+<li>Highly parallel execution and low memory usage due to pipeline design</li>
 </ul>
 </div>
 </div>
@@ -212,10 +222,26 @@ available under Windows. For Windows users we recommend using <a class="referenc
 data to complement experimental data, test and benchmark analysis procedures or
 for demonstrative purposes.</p>
 </div>
+<div class="section" id="where-is-it-going">
+<h2>Where is it going?<a class="headerlink" href="#where-is-it-going" title="Permalink to this headline">¶</a></h2>
+<p>SiMFS-Tk tries to provide a framework for further extensions and interfacing
+with other simulation software. We therefore try to maintain a highly
+modularized approach that uses simple interfaces. The purpose of the packkage
+is to produce simulated photon events. Non-trivial analysis is left to
+downstream software.</p>
+</div>
 <div class="section" id="how-to-get-started">
 <h2>How to get started?<a class="headerlink" href="#how-to-get-started" title="Permalink to this headline">¶</a></h2>
-<p>Clone the repository and run the installation commands. Detailed tutorials will
-be available soon.</p>
+<p>Clone the repository and run the installation commands. The compiled binaries
+are usable for simple tasks and for testing the functionalty. For more complex
+simulations, using <strong>pysimfs</strong>, a python package that coordinates the
+invokation of sets of SiMFS-components, is recommended. Check out the basic how
+to get started section and the tutorials to learn about SiMFS-Tk and the python
+driver.</p>
+</div>
+</div>
+<div class="section" id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
@@ -223,13 +249,24 @@ be available soon.</p>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#standard-procedure">Standard procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#component-basics">Component basics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#pipelining">Pipelining</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#extending">Extending</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart (SiMFS-core)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#diffusion-and-component-basics">Diffusion and component basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#evaluating-focus-functions">Evaluating focus functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#photophysics">Photophysics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#detection-and-photon-handling">Detection and photon handling</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (pysimfs)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#building-a-pipeline">Building a pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#pysimfs-startup">Pysimfs startup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#configuring-components">Configuring components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#running-a-simulation">Running a simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#chaining-components">Chaining components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#utilities">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="architecture.html#components">Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture.html#json">JSON</a></li>
@@ -254,7 +291,6 @@ be available soon.</p>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 </ul>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">

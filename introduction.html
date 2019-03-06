@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; SiMFS-Tk 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom_styles.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quickstart (SiMFS-core)" href="quickstart.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiMFS-Tk
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart (SiMFS-core)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (pysimfs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Component reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiMFS-Tk</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/introduction.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<span id="introduction-label"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>To understand the structure and functionality of <strong>SiMFS-Tk</strong>, let’s walk
+through a simple single molecule experiment and map out how it would be
+modeled.</p>
+<p>Take for instance a single dye molecule that lives in a small box that is
+illuminated by a focused laser beam. The molecule is free to diffuse according
+to a diffusion coefficient and randomly moves around the box. While moving, it
+encounters areas of different excitation light intensity. The fluorophore
+itself absorbs photons and traverses through different electronic and vibronic
+energy states, emitting a fluorescence photon from time to time. Depending on
+the molecules position these photons are collected by the microscope objective
+and detected by some downstream electronics. The output is a stream of photon
+times that contain information about the molecules movement through the laser
+focus and about the fluorophore’s photophysical characteristics such as triplet
+dynamics.</p>
+<p>To model such an experiment, we need quite a list of parameters, to specify the
+features of our experiment:</p>
+<ul class="simple">
+<li>Size of the diffusion box</li>
+<li>Diffusion coefficient</li>
+<li>Laser focus shape and intensity</li>
+<li>Energy state diagram of the fluorophore</li>
+<li>Detection focus shape</li>
+<li>…</li>
+</ul>
+<p>Some of these parameters are a simple number such as the diffusion coefficient,
+others such as the energy state diagram (Jablonksy diagram) are more complex
+and need some more thought to be specified correctly. Instead of tackling all
+these problems at once, let’s break these requirements down into smaller
+chunks. We start with the simulation of a diffusing object.</p>
+<p>We model the object’s position as a quartuple of <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z,</span> <span class="pre">t)</span></code> values
+indicating the molecule’s center position in x, y and z at time t. Given a
+starting position, a diffusion coefficient and a time step (e.g. 100ns), we can
+compute a series of random steps the molecule takes according to its diffusive
+behavior. We also add some boundaries for the molecule to keep it close to our
+observation volume. When a random step would put the molecule out of the box,
+we just drop it and try another step. For a second of simulation time, we get a
+list of 10 Million positions of a random walk with a time increment of 100ns
+each.</p>
+<p>Note that although we speak of <cite>the molecule</cite> here, we have not yet modeled a
+proper molecule. We just produce a list of coordinates that obey diffusive
+behavior. This idea might appear somewhat trivial, but is kind of important:
+The molecule does not need to know where it is. It just needs to know what the
+environment at a given position is like. More specifically, how bright is the
+laser at a certain point in time. From this viewpoint there is no difference
+between a molecule that randomly diffuses through a static laser focus and a
+stationary molecule that is irradiated by a randomly fluctuating laser
+intensity. Building the model this way, we have decoupled the diffusion and
+fluorescence simulation from each other.</p>
+<p>Now that we have the diffusion process solved, we need get to the laser
+intensity at each position to pass it on the fluorescence simulation. There are
+multiple ways to model the <cite>shape</cite> of a laser focus. Moreover the value of the
+focus function can be a plain intensity value or a full complex description of
+the EM-field. For our purpose let’s calculate the photon flux density in z for
+each point. This quantity signifies the number of photons that pass through a
+unit of area at a point (x, y, z) in z-direction. Its unit is
+<span class="math notranslate nohighlight">\(\frac{1}{s\cdot m^2}\)</span>. From the physics’ point of view, there are some
+requirements to such a function regarding diffraction limited focus sizes and
+area-normalized photon flux (all photons have to pass each layer in the
+z-dimension). Nonetheless, since we are simulating here, we are free to choose
+a function and can go forward with a simple 3D-Gaussian profile that is
+characterized by three waist parameters <span class="math notranslate nohighlight">\(w_x, w_y\)</span> and <span class="math notranslate nohighlight">\(w_z\)</span>.
+As mentioned the molecule does not need to know its position but only the
+photon flux density at any given point in time. So we pass through the time
+value of the coordinate list to the new photon flux density list, converting
+<cite>(x, y, z, t)</cite> into <cite>(f, t)</cite> with f being the photon flux density at position
+x, y, z.</p>
+<p>We can finally start simulating the fluorescence process now! But before that,
+we need to specify what should be simulated here. Let’s take a moment to review
+a model of the photophysics that are at work in the fluorophore. Given a
+Jablonys diagram with three states <strong>S0</strong>, <strong>S1</strong> and <strong>T1</strong> with their usual
+transitions <em>excitation</em>, <em>emission</em>, <em>intersystem-crossing (ISC)</em> and
+<em>reverse-intersystem-crossing (rISC)</em>. (We ignore vibrational states in the
+simulation.) Every transition is associated with a rate <span class="math notranslate nohighlight">\(r\)</span>. We get the
+rates <span class="math notranslate nohighlight">\(r_{exi}, r_{emi}, r_{ISC}\)</span> and <span class="math notranslate nohighlight">\(r_{rISC}\)</span>. We can set the
+latter three to constant values since they do not depend on the environment.
+<span class="math notranslate nohighlight">\(r_{exi}\)</span>, the rate of excitation however is dependent on the laser
+intensity. So we compute the rate of this rate according to our list of photon
+flux densities, updating its value with each new time step. To convert from
+photon flux density to a rate, we need an absorption cross section
+<span class="math notranslate nohighlight">\(\sigma\)</span>, that specifies, how many of the excitation photons are absorbed
+by the fluorophore.  This however is a constant value that can be derived from
+a molar absorption coefficient <span class="math notranslate nohighlight">\(\varepsilon\)</span>. With this we can set a
+dynamically updating rate for the excitation transition in our Jablonsky
+diagram.</p>
+<p>The system is now set to start the fluorescence simulation. <span class="math notranslate nohighlight">\(r_{exi}\)</span> is
+set to its first value at time <span class="math notranslate nohighlight">\(t=0\)</span>. The systems state is initialized to
+be <strong>S0</strong>, the ground state. The following algorithm is used:</p>
+<ol class="arabic simple">
+<li>For all outgoing transitions of the current state, calculate a random lifetime.</li>
+<li>Choose the path of shortest lifetime.</li>
+<li>Traverse to the path’s target state and increment the clock by the lifetime.</li>
+</ol>
+<p>The random lifetimes that are computed here follow exponential distributions
+with their characteristic decay constant <span class="math notranslate nohighlight">\(\lambda=\frac{1}{r}\)</span> being the
+inverse of the transition rate. In this way the fluorophore progresses from
+<strong>S0</strong> to <strong>S1</strong> since there is only one way to go. In <strong>S1</strong> most of the time
+the lifetime of the emission edge will be shorter than the lifetime of the ISC
+transition, so most of the time the system falls back to <strong>S0</strong>. Whenever the
+emission transition is traversed, the current clock time is written out as a
+timetag for an emitted photon. Occasionally the lifetime of the ISC transition
+is shorter than the emission transition and the system moves to the <strong>T1</strong>
+state. From there only the rISC transition can bring it back to <strong>S0</strong>. Since
+the <span class="math notranslate nohighlight">\(rISC\)</span> is typically small, the molecule makes a large step in time
+without producing a photon. A dark state was simulated. This process continues
+until the end of the first diffusion step is reached. At 100ns time, current
+value for <span class="math notranslate nohighlight">\(r_{exi}\)</span> is no longer valid. The next photon flux density,
+value is read, converted to a transition rate and the simulation continues now
+with new conditions. When all input flux densities are processed, the
+simulation terminates and we are left with a list of times, representing the
+emitted photons.</p>
+<p>With the list of photons we can already start an analysis like binning and burst
+selection or computing a correlation function. However, so far we include
+<em>every</em> emitted photon in our dataset. In an actual experiment, a significant
+fraction of photons is lost due to the detection system. To model this, we need
+a detection efficiency for each photon that allows us to randomly drop photons
+according to a fixed probability. Let’s say we want a detection function
+similar to our excitation function (3D Gaussian). We can easily compute this
+shape to map out probabilities between 0 and 1, yielding highest detection
+efficiency (all photons are detected) close to the center and low efficiency
+far out of the center. We then need to examine each photon arrival time and
+query the probability of detection to decide if we keep or drop the photon. But
+there is a problem: We know the detection efficiency as a function of position.
+The photon list has no position information, so we cannot directly find out the
+right detection efficiency for each photon. We first need to take the
+coordinate list from the beginning and evaluate the detection function in the
+same way as we did with the excitation function to get a list of detection
+efficiencies and time points. With this list of probabilities and times we can
+go through the list of photons, detecting all photons within the first 100ns
+with the first detection probability value. We progress through both lists
+until all photons are processed.</p>
+<p>Finally! We finished the whole simulation of a single molecule diffusing
+through a laser focus that absorbs and emits light that is eventually collected
+by the detection system. The stepwise process we employed here might seem
+unnecessarily complicated or even inefficient regarding the duplicate work of
+going through all diffusion coordinates. There are however a lot of benefits
+with this approach:</p>
+<ol class="arabic simple">
+<li><em>It’s safer</em> – Doing the simulation step by step gives you finer control and
+more confidence</li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><em>It’s easier</em> – Tweaking parameters and exploring the
+effects is much simpler when you can loop through just a small part of the
+simulation at a time</li>
+</ol>
+<ol class="arabic simple" start="2">
+<li><em>It’s open</em> – The example here is just the basic
+functionality of SiMFS-Tk. There are more functions included. With the
+modular strategy it is simple to plug your own functionality into the
+pipeline</li>
+</ol>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quickstart (SiMFS-core)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Till Zickmantel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -23,9 +23,6 @@ plain binary files on disk.
    
    $ simfs_xxx < params.json > log.json
 
-Dumb by choice
-^^^^^^^^^^^^^^
-
 The component interface is intentionally kept simple. They will do their best
 not to crash due to erroneus input, but won't do any parameter checking or
 input validation. All a component can do is read, process and write data

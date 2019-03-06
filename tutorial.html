@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tutorial &mdash; SiMFS-Tk 0.0.1 documentation</title>
+  <title>Tutorial (pysimfs) &mdash; SiMFS-Tk 0.0.1 documentation</title>
   
 
   
@@ -26,10 +26,11 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom_styles.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Architecture" href="architecture.html" />
-    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Quickstart (SiMFS-core)" href="quickstart.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,29 +85,23 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#component-basics">Component basics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#running-a-component">Running a component</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inspecting-data">Inspecting data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tweaking-parameters">Tweaking parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-logs">Using logs</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#pipelining">Pipelining</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#diffusion-and-focus-function">Diffusion and focus function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#a-simple-molecule">A simple molecule</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#multiple-molecules">Multiple molecules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#caveats">Caveats</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#extending">Extending</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#intercepting-the-pipeline">Intercepting the pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#writing-a-custom-component-c">Writing a custom component (C++)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart (SiMFS-core)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial (pysimfs)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#building-a-pipeline">Building a pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pysimfs-startup">Pysimfs startup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-components">Configuring components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-a-simulation">Running a simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chaining-components">Chaining components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#default-parameters">Default parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#context-manager">Context manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-data">Grid data</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">Component reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
@@ -156,7 +151,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Tutorial</li>
+      <li>Tutorial (pysimfs)</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -175,52 +170,205 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
-<p>This section contains a series of short tutorials for common tasks with
-<em>SiMFS-Tk</em>. Check also the more elaborate examples in the accompanying jupyter
-notebooks.</p>
+  <div class="section" id="tutorial-pysimfs">
+<h1>Tutorial (pysimfs)<a class="headerlink" href="#tutorial-pysimfs" title="Permalink to this headline">¶</a></h1>
+<p>This section introduces the use of pysimfs for more complex simulation tasks.</p>
+<div class="section" id="building-a-pipeline">
+<h2>Building a pipeline<a class="headerlink" href="#building-a-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>You have seen the basic structure of a SiMFS-Tk simulation in the
+<a class="reference internal" href="introduction.html#introduction-label"><span class="std std-ref">Introduction</span></a> and <a class="reference internal" href="quickstart.html#quickstart-label"><span class="std std-ref">Quickstart (SiMFS-core)</span></a> sections. So far the
+simulations have been a step-by-step procedure with a lot of intermediate file
+clobber. If you are familiar with the UNIX file system, you might have guessed,
+that you can avoid the large amount of data on disk by using pipes. Pipes are
+file-like obejects that allow concurrent writing and reading to pass
+information from one process to the other.</p>
+<p>The manual approach would be to configure two processes like <code class="docutils literal notranslate"><span class="pre">simfs_dif</span></code> and
+<code class="docutils literal notranslate"><span class="pre">simfs_exi</span></code> to write to and read from the same file called <code class="docutils literal notranslate"><span class="pre">coord_pipe</span></code>.
+Then you create a named pipe of this name and start the processes in parallel:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mkfifo coord_pipe
+$ simfs_dif &lt; dif.json &gt; dif.log.json <span class="p">&amp;</span> simfs_exi &lt; exi.json &gt; exi.log.json
+</pre></div>
+</div>
+<p>The two processes run simultaneously passing coordinates from <code class="docutils literal notranslate"><span class="pre">simfs_dif</span></code> to
+<code class="docutils literal notranslate"><span class="pre">simfs_exi</span></code> continuously without using diskspace for coordinate data. Only
+the resulting excitaion data file will be created (unless there is more
+piping).</p>
+<p>This approach is pretty powerful in that it saves diskspace, avoids
+unnecessarily large intermediate data files and allows for better usage of
+multiple cores. It is however quite cumbersome to manage the named pipes
+yourself. As soon as one connection within a complex pipeline is not set
+correctly, the whole run blocks and leaves partial processes and files behind
+– a <em>huge</em> mess! Therefore we have a little python package that helps you set
+up and run your SiMFS-components, while managing the required pipes for
+parallel execution for you! The next section will show you how to use pysimfs
+to run a similar simulation like the basic commandline example from python.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Tutorials will be released soon.</p>
-</div>
-<div class="section" id="component-basics">
-<h2>Component basics<a class="headerlink" href="#component-basics" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="running-a-component">
-<h3>Running a component<a class="headerlink" href="#running-a-component" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="inspecting-data">
-<h3>Inspecting data<a class="headerlink" href="#inspecting-data" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="tweaking-parameters">
-<h3>Tweaking parameters<a class="headerlink" href="#tweaking-parameters" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="using-logs">
-<h3>Using logs<a class="headerlink" href="#using-logs" title="Permalink to this headline">¶</a></h3>
+<p class="last">Pysimfs is a python package designed to be used in python scripts and
+jupyter-notebooks This tutorial requires a basic understanding of python,
+numpy and matplotlib.</p>
 </div>
 </div>
-<div class="section" id="pipelining">
-<h2>Pipelining<a class="headerlink" href="#pipelining" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="diffusion-and-focus-function">
-<h3>Diffusion and focus function<a class="headerlink" href="#diffusion-and-focus-function" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="a-simple-molecule">
-<h3>A simple molecule<a class="headerlink" href="#a-simple-molecule" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="multiple-molecules">
-<h3>Multiple molecules<a class="headerlink" href="#multiple-molecules" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="caveats">
-<h3>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="pysimfs-startup">
+<h2>Pysimfs startup<a class="headerlink" href="#pysimfs-startup" title="Permalink to this headline">¶</a></h2>
+<p>Once you have the pysimfs package installed, you can import it. It will try to
+locate the SiMFS-Tk executables in its basepath. If there is an error, check
+the location of your SiMFS-core installation and adapte the path in the pysimfs
+package’s <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>.</p>
+<p>The import should look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysimfs</span> <span class="kn">as</span> <span class="nn">simfs</span>
+<span class="go">    All simfs components found in /opt/SiMFS-Tk/SiMFS-core/build/src/components/.</span>
+</pre></div>
 </div>
 </div>
-<div class="section" id="extending">
-<h2>Extending<a class="headerlink" href="#extending" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="intercepting-the-pipeline">
-<h3>Intercepting the pipeline<a class="headerlink" href="#intercepting-the-pipeline" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="configuring-components">
+<h2>Configuring components<a class="headerlink" href="#configuring-components" title="Permalink to this headline">¶</a></h2>
+<p>Each <code class="docutils literal notranslate"><span class="pre">simfs_xxx</span></code> executable has a pysimfs object to control it. To create a
+diffusion component, create a pysimfs.Diffusion object like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dif</span> <span class="o">=</span> <span class="n">simfs</span><span class="o">.</span><span class="n">Diffusion</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dif</span><span class="o">.</span><span class="n">params</span>
+<span class="go">    {&#39;collision_output&#39;: &#39;__collisions__&#39;,</span>
+<span class="go">     &#39;coordinate_output&#39;: &#39;__coordinates__&#39;,</span>
+<span class="go">     &#39;diffusion_coefficient&#39;: 1e-10,</span>
+<span class="go">     &#39;experiment_time&#39;: 1.0,</span>
+<span class="go">     &#39;half_height&#39;: 1e-06,</span>
+<span class="go">     &#39;increment&#39;: 1e-07,</span>
+<span class="go">     &#39;radius&#39;: 1e-06,</span>
+<span class="go">     &#39;seed&#39;: 477755232}</span>
+</pre></div>
 </div>
-<div class="section" id="writing-a-custom-component-c">
-<h3>Writing a custom component (C++)<a class="headerlink" href="#writing-a-custom-component-c" title="Permalink to this headline">¶</a></h3>
+<p>So far no simulation ran. You can inspect (or change) the current paramters of
+the component in its <code class="docutils literal notranslate"><span class="pre">params</span></code> dictionary. Every component constructor takes
+keyword argument that map exactly to the toplevel json members of the manages
+SiMFS-somponent. To create the diffusion example again:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dif</span> <span class="o">=</span> <span class="n">simfs</span><span class="o">.</span><span class="n">Diffusion</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">collision_output</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">coordinate_output</span><span class="o">=</span><span class="s1">&#39;coords.dat&#39;</span>
+<span class="gp">... </span>   <span class="n">diffusion_coefficient</span><span class="o">=</span><span class="mf">4.35e-10</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dif</span><span class="o">.</span><span class="n">params</span>
+<span class="go">    {&#39;collision_output&#39;: &#39;/dev/null&#39;,</span>
+<span class="go">     &#39;coordinate_output&#39;: &#39;coords.dat&#39;,</span>
+<span class="go">     &#39;diffusion_coefficient&#39;: 4.35e-10,</span>
+<span class="go">     &#39;experiment_time&#39;: 1.0,</span>
+<span class="go">     &#39;half_height&#39;: 1e-06,</span>
+<span class="go">     &#39;increment&#39;: 1e-07,</span>
+<span class="go">     &#39;radius&#39;: 1e-06,</span>
+<span class="go">     &#39;seed&#39;: 2235270572}</span>
+</pre></div>
+</div>
+<p>This is simple a convenient wrapper around the process of getting the defaults
+with the <code class="docutils literal notranslate"><span class="pre">list</span></code> option, save it to a file, edit it and reapply the changes.</p>
+</div>
+<div class="section" id="running-a-simulation">
+<h2>Running a simulation<a class="headerlink" href="#running-a-simulation" title="Permalink to this headline">¶</a></h2>
+<p>So far no simulation run. To run the single component, create a <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>
+and add the configured component to it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">simfs</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dif</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There might be some messages about already existing folders, when you run this
+multiple times. You can ignore this for now. To start the simulation simply
+call <code class="docutils literal notranslate"><span class="pre">run</span></code> on the simulation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">log</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="go">    started /opt/SiMFS-Tk/SiMFS-core/build/src/components/mol/simfs_dif</span>
+<span class="go">    Simulation completed after 1.86 seconds.</span>
+</pre></div>
+</div>
+<p>You get list of all paramter logs and error messages of all components. The
+output reports which executables were started and finally how long the
+simulatio took. The file <code class="docutils literal notranslate"><span class="pre">coords.dat</span></code> will be created in your current
+direcory. To quickly load the simulation results into your python session, use
+the <code class="docutils literal notranslate"><span class="pre">get_results</span></code> function of the simulation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">res</span></code> now contains a dictionary of numpy arrays that contain the result data.</p>
+</div>
+<div class="section" id="chaining-components">
+<h2>Chaining components<a class="headerlink" href="#chaining-components" title="Permalink to this headline">¶</a></h2>
+<p>We could now continue to run the next component in a new simulation, reading
+the new <code class="docutils literal notranslate"><span class="pre">coords.dat</span></code> file.  However pysimfs is capable of handling more than
+one component per simulation. Take a look at this new simulation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">simfs</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+<span class="go">        simfs.Diffusion(</span>
+<span class="go">            coordinate_output=&#39;coords&#39;,</span>
+<span class="go">            collision_output=os.devnull,</span>
+<span class="go">            diffusion_coefficient=4.35e-10</span>
+<span class="go">        )</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+<span class="go">        simfs.Excitation(</span>
+<span class="go">             input=&#39;coords&#39;,</span>
+<span class="go">             output=&#39;exi.dat&#39;</span>
+<span class="go">        )</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">log</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="go">    started /opt/SiMFS-Tk/SiMFS-core/build/src/components/fcs/simfs_exi</span>
+<span class="go">    started /opt/SiMFS-Tk/SiMFS-core/build/src/components/mol/simfs_dif</span>
+<span class="go">    Simulation completed after 2.93 seconds.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Two components were started simultaneously. Pysimfs detected that <code class="docutils literal notranslate"><span class="pre">dif</span></code> and
+<code class="docutils literal notranslate"><span class="pre">exi</span></code> share an output/input pair and created the requirede pipe for us. As a
+result only the <code class="docutils literal notranslate"><span class="pre">exi.dat</span></code> file is generated. The intermediate <code class="docutils literal notranslate"><span class="pre">coords</span></code> are
+gone and don’t occupy any disk space.</p>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>With pysimfs it is much easier to design and run more complex simulations.
+Checkout the example notebooks for more complex simulations.  There are some
+more helper functions included in pysimfs that make the simulatio process
+easier:</p>
+<div class="section" id="default-parameters">
+<h3>Default parameters<a class="headerlink" href="#default-parameters" title="Permalink to this headline">¶</a></h3>
+<p>If you work in a jupyter notebook context, it can be helpful to have explicit
+parameter dictionaries in some cases. To quickly load a default parameter set
+from a component, you can use the <code class="docutils literal notranslate"><span class="pre">simfs_default</span></code> magic:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">simfs_default</span> <span class="n">dif</span>
+</pre></div>
+</div>
+<p>As a result, a default paramter dictionary is written to the current cell.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Note that the magic overwrites the content of the current cell.</p>
+</div>
+<p>You can pass a paramter dictionary to a component by using <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dif</span> <span class="o">=</span> <span class="n">simfs</span><span class="o">.</span><span class="n">Diffusion</span><span class="p">(</span><span class="o">**</span><span class="n">dif_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="context-manager">
+<h3>Context manager<a class="headerlink" href="#context-manager" title="Permalink to this headline">¶</a></h3>
+<p>Since pysimfs interacts a lot with the filesystem, there can be some
+accumulation of old intermediate files like named pipes.  Pysimfs uses
+temporary folders to manage its files, but does not clean them up by default.</p>
+<p>An easy way to manage the lifetime of these files is to use the context manager
+capability of <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pysimfs</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="k">with</span> <span class="n">Simulation</span><span class="p">()</span> <span class="k">as</span> <span class="n">S</span><span class="p">:</span>
+    <span class="n">S</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Diffusion</span><span class="p">(</span><span class="n">coordinate_output</span><span class="o">=</span><span class="s1">&#39;coords&#39;</span><span class="p">,</span> <span class="n">collision_output</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">)</span>
+    <span class="n">S</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Excitation</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s1">&#39;coords&#39;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;exi.dat&#39;</span><span class="p">)</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This idiom wraps the simulation setup and run into a context that handles the
+cleanup of temporary files when done.</p>
+</div>
+<div class="section" id="grid-data">
+<h3>Grid data<a class="headerlink" href="#grid-data" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">simfs_img</span></code> and <code class="docutils literal notranslate"><span class="pre">simfs_pre</span></code> component produce numeric data on a grid in
+a binary format. Pysimfs includes a loader for these files.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">simfs</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">GridData</span><span class="p">(</span><span class="s1">&#39;image.dat&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Checkout the notebooks for further usage examples.</p>
 </div>
 </div>
 </div>
@@ -233,10 +381,10 @@ notebooks.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="quickstart.html" class="btn btn-neutral" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="quickstart.html" class="btn btn-neutral" title="Quickstart (SiMFS-core)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -26,9 +26,10 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom_styles.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Quickstart" href="quickstart.html" />
+    <link rel="next" title="Introduction" href="introduction.html" />
     <link rel="prev" title="Welcome to SiMFS-Tk’s documentation!" href="index.html" /> 
 
   
@@ -93,8 +94,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#standard-procedure">Standard procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart (SiMFS-core)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (pysimfs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">Component reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
@@ -165,20 +168,20 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p><em>SiMFS-TK</em> runs on Linux, Mac OS and Windows, although a UNIX system that
-supports named pipes is recommended.</p>
+<p>In principal SiMFS-Tk can be used on Linux, Mac OS and Windows, although a UNIX
+system that supports named pipes is recommended.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last"><a class="reference external" href="https://www.cygwin.org">Cygwin</a> is a robust UNIX environemnt for Windows that provides a bash
-terminal, named pipes, and the gnu compiler suite. Cygwin is the recommended
-way of using <em>SiMFS-Tk</em> on Windows.</p>
+<p class="last">The installation process will be improved in the future to integrate better
+with the python driver. Consider this the developer documentation for
+building the project from source.</p>
 </div>
 <div class="section" id="prerquisites">
 <h2>Prerquisites<a class="headerlink" href="#prerquisites" title="Permalink to this headline">¶</a></h2>
-<p>Before using <em>SiMFS-Tk</em>, make sure you have the following tools:</p>
+<p>Before using SiMFS-Tk, make sure you have the following tools:</p>
 <ul class="simple">
 <li>git</li>
-<li>a gnu c++ compiler (g++ or clang)</li>
+<li>a c++ compiler (g++ or clang)</li>
 <li>cmake</li>
 <li>python3 (if you want to use the python driver)</li>
 </ul>
@@ -192,15 +195,23 @@ way of using <em>SiMFS-Tk</em> on Windows.</p>
 </div>
 <div class="section" id="windows">
 <h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
-<p>We recommend <a class="reference external" href="https://www.cygwin.org">Cygwin</a> to run <em>SiMFS-TK</em> on Windows. Make sure you select the
-required packages during the installation <a class="reference external" href="https://www.cygwin.org">Cygwin</a>.</p>
+<div class="strike admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We recommend Cygwin to run SiMFS-Tk on Windows. Make sure you select the
+required packages during the installation Cygwin.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We recommend the Windows subsystem for linux (<a class="reference external" href="https://docs.microsoft.com/de-de/windows/wsl/about">WSL</a>) for Windows users.
+Follow the installation steps for Linux.</p>
+</div>
 </div>
 </div>
 <div class="section" id="standard-procedure">
 <h2>Standard procedure<a class="headerlink" href="#standard-procedure" title="Permalink to this headline">¶</a></h2>
 <p>The standard procedure after installing all dependencies is cloning the
 SiMFS-Tk repository and invoking cmake:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone &lt;url&gt; simfs
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sponchcafe/SiMFS-core/ simfs
 $ mkdir simfs/build
 $ <span class="nb">cd</span> simfs/build
 $ cmake ..
@@ -208,8 +219,38 @@ $ make
 $ ctest
 </pre></div>
 </div>
-<p>The executables are found in <code class="code docutils literal notranslate"><span class="pre">build/src/components/&lt;group&gt;/&lt;name&gt;</span></code>, e.g.
-<code class="code docutils literal notranslate"><span class="pre">build/src/components/mol/simfs_dif</span></code>.</p>
+<p>After completion of the installation the executables are found in
+<code class="code docutils literal notranslate"><span class="pre">build/src/components/&lt;group&gt;/&lt;name&gt;</span></code>, e.g.
+<code class="code docutils literal notranslate"><span class="pre">build/src/components/mol/simfs_dif</span></code>.  The component directory in the
+build folder should look like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/opt/SiMFS-Tk/SiMFS-core/build/src/components/
+├── ...
+├── fcs
+│   ├── ...
+│   ├── simfs_det
+│   ├── simfs_exi
+│   ├── simfs_pls
+│   └── simfs_pre
+├── mol
+│   ├── ...
+│   ├── simfs_cnf
+│   ├── simfs_dif
+│   └── simfs_sft
+├── ph2
+│   ├── ...
+│   └── simfs_ph2
+└── utl
+    ├── ...
+    ├── simfs_buf
+    ├── simfs_img
+    ├── simfs_mix
+    ├── simfs_spl
+    └── simfs_t3r
+</pre></div>
+</div>
+<p>You can copy or link the executables to a location where you can easily invoke
+them. The next section will introduce the basic usage of a SiMFS-Tk component
+from the commandline.</p>
 </div>
 </div>
 
@@ -221,7 +262,7 @@ $ ctest
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Welcome to SiMFS-Tk’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
