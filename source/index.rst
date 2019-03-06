@@ -94,6 +94,7 @@ Contents
    introduction
    quickstart
    tutorial
+   examples
    architecture
    components
    api
